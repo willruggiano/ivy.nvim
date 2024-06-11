@@ -20,7 +20,15 @@ git clone https://github.com/AdeAttwood/ivy.nvim ~/.config/nvim/pack/bundle/star
 
 ### Plugin managers
 
-TODO: Add docs in the plugin managers I don't use any
+Using [lazy.nvim](https://github.com/folke/lazy.nvim)
+```lua
+{
+    "AdeAttwood/ivy.nvim",
+    build = "cargo build --release",
+},
+```
+
+TODO: Add more plugin managers
 
 ### Compiling
 
