@@ -94,6 +94,13 @@ Action can be run on selected candidates provide functionality
 | Next Checkpoint| \<C-M-n\>   |Move to the next candidate and keep Ivy open and focussed                      |
 | Previous Checkpoint| \<C-M-n\>|Move to the previous candidate and keep Ivy open and focussed                 |
 
+Add your own keymaps for an action by adding a `ftplugin/ivy.lua` file in your config.
+Just add a simple keymap like this:
+
+```lua
+vim.api.nvim_set_keymap( "n", "<esc>", "<cmd>lua vim.ivy.destroy()<CR>", { noremap = true, silent = true, nowait = true })
+```
+
 
 ## API
 
