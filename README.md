@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/logo.svg" alt="ivy.vim" /> 
+<img src="assets/logo.svg" alt="ivy.vim" />
 
 <br />
 <br />
@@ -80,12 +80,20 @@ A command can be run that will launch the completion UI
 
 Action can be run on selected candidates provide functionality
 
-| Action         | Description                                                                    |
-| -------------- | ------------------------------------------------------------------------------ |
-| Complete       | Run the completion function, usually this will be opening a file               |
-| Peek           | Run the completion function on a selection, but don't close the results window |
-| Vertical Split | Run the completion function in a new vertical split                            |
-| Split          | Run the completion function in a new split                                     |
+| Action         | Key Map     | Description                                                                    |
+| -------------- | ----------- | ------------------------------------------------------------------------------ |
+| Complete       | \<CR\>      |Run the completion function, usually this will be opening a file               |
+| Peek           | not implemented yet |Run the completion function on a selection, but don't close the results window |
+| Vertical Split | \<C-v\>     |Run the completion function in a new vertical split                            |
+| Split          | \<C-s\>     |Run the completion function in a new split                                     |
+| Destroy        | \<C-c\>     |Close the results window                                                       |
+| Clear          | \<C-u\>     |Clear the results window                                                       |
+| Delete word    | \<C-w\>     |Delete the word under the cursor                                               |
+| Next           | \<C-n\>     |Move to the next candidate                                                     |
+| Previous       | \<C-p\>     |Move to the previous candidate                                                 |
+| Next Checkpoint| \<C-M-n\>   |Move to the next candidate and keep Ivy open and focussed                      |
+| Previous Checkpoint| \<C-M-n\>|Move to the previous candidate and keep Ivy open and focussed                 |
+
 
 ## API
 
