@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/logo.svg" alt="ivy.vim" /> 
+<img src="assets/logo.svg" alt="ivy.vim" />
 
 <br />
 <br />
@@ -20,7 +20,47 @@ git clone https://github.com/AdeAttwood/ivy.nvim ~/.config/nvim/pack/bundle/star
 
 ### Plugin managers
 
-TODO: Add docs in the plugin managers I don't use any
+Using [lazy.nvim](https://github.com/folke/lazy.nvim)
+```lua
+{
+    "AdeAttwood/ivy.nvim",
+    build = "cargo build --release",
+},
+```
+
+TODO: Add more plugin managers
+
+### Setup / Configuration
+
+Ivy can be configured with minimal config that will give you all the defaults
+provided by Ivy.
+
+```lua
+require('ivy').setup()
+```
+
+With Ivy you can configure your own backends.
+
+```lua
+require('ivy').setup {
+  backends = {
+    -- A backend module that will be registered
+    "ivy.backends.buffers",
+    -- Using a table so you can configure a custom keymap overriding the
+    -- default one.
+    { "ivy.backends.files", { keymap = "<C-p>" } }
+  },
+}
+```
+
+The `setup` function can only be called once, if its called a second time any
+backends or config will not be used. Ivy does expose the `register_backend`
+function, this can be used to load backends before or after the setup function
+is called.
+
+```lua
+require('ivy').register_backend("ivy.backends.files")
+```
 
 ### Compiling
 
@@ -56,28 +96,46 @@ cp ./post-merge.sample ./.git/hooks/post-merge
 
 ## Features
 
-### Commands
+### Backends
 
-A command can be run that will launch the completion UI
+A backend is a module that will provide completion candidates for the UI to
+show. It will also provide functionality when actions are taken. The Command
+and Key Map are the default options provided by the backend, they can be
+customized when you register it.
 
-| Command            | Key Map     | Description                                                 |
-| ------------------ | ----------- | ----------------------------------------------------------- |
-| IvyFd              | \<leader\>p | Find files in your project with a custom rust file finder   |
-| IvyAg              | \<leader\>/ | Find content in files using the silver searcher             |
-| IvyBuffers         | \<leader\>b | Search though open buffers                                  |
-| IvyLines           |             | Search the lines in the current buffer                      |
-| IvyWorkspaceSymbol |             | Search for workspace symbols using the lsp workspace/symbol |
+| Module                               | Command            | Key Map     | Description                                                 |
+| ------------------------------------ | ------------------ | ----------- | ----------------------------------------------------------- |
+| `ivy.backends.files`                 | IvyFd              | \<leader\>p | Find files in your project with a custom rust file finder   |
+| `ivy.backends.ag`                    | IvyAg              | \<leader\>/ | Find content in files using the silver searcher             |
+| `ivy.backends.rg`                    | IvyRg              | \<leader\>/ | Find content in files using ripgrep cli tool                |
+| `ivy.backends.buffers`               | IvyBuffers         | \<leader\>b | Search though open buffers                                  |
+| `ivy.backends.lines`                 | IvyLines           |             | Search the lines in the current buffer                      |
+| `ivy.backends.lsp-workspace-symbols` | IvyWorkspaceSymbol |             | Search for workspace symbols using the lsp workspace/symbol |
 
 ### Actions
 
 Action can be run on selected candidates provide functionality
 
-| Action         | Description                                                                    |
-| -------------- | ------------------------------------------------------------------------------ |
-| Complete       | Run the completion function, usually this will be opening a file               |
-| Peek           | Run the completion function on a selection, but don't close the results window |
-| Vertical Split | Run the completion function in a new vertical split                            |
-| Split          | Run the completion function in a new split                                     |
+| Action         | Key Map     | Description                                                                    |
+| -------------- | ----------- | ------------------------------------------------------------------------------ |
+| Complete       | \<CR\>      |Run the completion function, usually this will be opening a file               |
+| Vertical Split | \<C-v\>     |Run the completion function in a new vertical split                            |
+| Split          | \<C-s\>     |Run the completion function in a new split                                     |
+| Destroy        | \<C-c\>     |Close the results window                                                       |
+| Clear          | \<C-u\>     |Clear the results window                                                       |
+| Delete word    | \<C-w\>     |Delete the word under the cursor                                               |
+| Next           | \<C-n\>     |Move to the next candidate                                                     |
+| Previous       | \<C-p\>     |Move to the previous candidate                                                 |
+| Next Checkpoint| \<C-M-n\>   |Move to the next candidate and keep Ivy open and focussed                      |
+| Previous Checkpoint| \<C-M-n\>|Move to the previous candidate and keep Ivy open and focussed                 |
+
+Add your own keymaps for an action by adding a `ftplugin/ivy.lua` file in your config.
+Just add a simple keymap like this:
+
+```lua
+vim.api.nvim_set_keymap( "n", "<esc>", "<cmd>lua vim.ivy.destroy()<CR>", { noremap = true, silent = true, nowait = true })
+```
+
 
 ## API
 
@@ -130,7 +188,7 @@ vertical split action it will open the buffer in a new `vsplit`
         { content = "Three" },
       }
     end,
-    -- Action callback that will be called on the completion or peek actions.
+    -- Action callback that will be called on the completion or checkpoint actions.
     -- The currently selected item is passed in as the result.
     function(result) vim.cmd("edit " .. result) end
   )
