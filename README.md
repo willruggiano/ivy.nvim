@@ -21,11 +21,37 @@ git clone https://github.com/AdeAttwood/ivy.nvim ~/.config/nvim/pack/bundle/star
 ### Plugin managers
 
 Using [lazy.nvim](https://github.com/folke/lazy.nvim)
+
 ```lua
 {
     "AdeAttwood/ivy.nvim",
     build = "cargo build --release",
 },
+```
+
+Using [mini.deps](https://github.com/echasnovski/mini.deps)
+
+```lua
+local deps = require "mini.deps"
+deps.later(function() -- Or `deps.now` if you want this to be loaded immediately
+  local build = function(args)
+    local obj = vim
+      .system(
+        { "cargo", "build", "--release", string.format("%s%s%s", "--manifest-path=", args.path, "/Cargo.toml") },
+        { text = true }
+      )
+      :wait()
+    vim.print(vim.inspect(obj))
+  end
+
+  deps.add {
+    source = "AdeAttwood/ivy.nvim",
+    hooks = {
+      post_install = build,
+      post_checkout = build,
+    },
+  }
+end)
 ```
 
 TODO: Add more plugin managers
@@ -36,19 +62,19 @@ Ivy can be configured with minimal config that will give you all the defaults
 provided by Ivy.
 
 ```lua
-require('ivy').setup()
+require("ivy").setup()
 ```
 
 With Ivy you can configure your own backends.
 
 ```lua
-require('ivy').setup {
+require("ivy").setup {
   backends = {
     -- A backend module that will be registered
     "ivy.backends.buffers",
     -- Using a table so you can configure a custom keymap overriding the
     -- default one.
-    { "ivy.backends.files", { keymap = "<C-p>" } }
+    { "ivy.backends.files", { keymap = "<C-p>" } },
   },
 }
 ```
@@ -59,7 +85,7 @@ function, this can be used to load backends before or after the setup function
 is called.
 
 ```lua
-require('ivy').register_backend("ivy.backends.files")
+require("ivy").register_backend "ivy.backends.files"
 ```
 
 ### Compiling
@@ -116,26 +142,30 @@ customized when you register it.
 
 Action can be run on selected candidates provide functionality
 
-| Action         | Key Map     | Description                                                                    |
-| -------------- | ----------- | ------------------------------------------------------------------------------ |
-| Complete       | \<CR\>      |Run the completion function, usually this will be opening a file               |
-| Vertical Split | \<C-v\>     |Run the completion function in a new vertical split                            |
-| Split          | \<C-s\>     |Run the completion function in a new split                                     |
-| Destroy        | \<C-c\>     |Close the results window                                                       |
-| Clear          | \<C-u\>     |Clear the results window                                                       |
-| Delete word    | \<C-w\>     |Delete the word under the cursor                                               |
-| Next           | \<C-n\>     |Move to the next candidate                                                     |
-| Previous       | \<C-p\>     |Move to the previous candidate                                                 |
-| Next Checkpoint| \<C-M-n\>   |Move to the next candidate and keep Ivy open and focussed                      |
-| Previous Checkpoint| \<C-M-n\>|Move to the previous candidate and keep Ivy open and focussed                 |
+| Action              | Key Map   | Description                                                      |
+| ------------------- | --------- | ---------------------------------------------------------------- |
+| Complete            | \<CR\>    | Run the completion function, usually this will be opening a file |
+| Vertical Split      | \<C-v\>   | Run the completion function in a new vertical split              |
+| Split               | \<C-s\>   | Run the completion function in a new split                       |
+| Destroy             | \<C-c\>   | Close the results window                                         |
+| Clear               | \<C-u\>   | Clear the results window                                         |
+| Delete word         | \<C-w\>   | Delete the word under the cursor                                 |
+| Next                | \<C-n\>   | Move to the next candidate                                       |
+| Previous            | \<C-p\>   | Move to the previous candidate                                   |
+| Next Checkpoint     | \<C-M-n\> | Move to the next candidate and keep Ivy open and focussed        |
+| Previous Checkpoint | \<C-M-n\> | Move to the previous candidate and keep Ivy open and focussed    |
 
 Add your own keymaps for an action by adding a `ftplugin/ivy.lua` file in your config.
 Just add a simple keymap like this:
 
 ```lua
-vim.api.nvim_set_keymap( "n", "<esc>", "<cmd>lua vim.ivy.destroy()<CR>", { noremap = true, silent = true, nowait = true })
+vim.api.nvim_set_keymap(
+  "n",
+  "<esc>",
+  "<cmd>lua vim.ivy.destroy()<CR>",
+  { noremap = true, silent = true, nowait = true }
+)
 ```
-
 
 ## API
 
@@ -190,7 +220,9 @@ vertical split action it will open the buffer in a new `vsplit`
     end,
     -- Action callback that will be called on the completion or checkpoint actions.
     -- The currently selected item is passed in as the result.
-    function(result) vim.cmd("edit " .. result) end
+    function(result)
+      vim.cmd("edit " .. result)
+    end
   )
 ```
 
