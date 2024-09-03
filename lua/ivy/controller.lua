@@ -3,7 +3,6 @@ local prompt = require "ivy.prompt"
 local utils = require "ivy.utils"
 
 local controller = {}
-controller.action = utils.actions
 
 controller.items = nil
 controller.callback = nil
@@ -56,7 +55,7 @@ end
 
 controller.checkpoint = function()
   vim.api.nvim_set_current_win(window.origin)
-  controller.callback(window.get_current_selection(), controller.action.CHECKPOINT)
+  controller.callback(window.get_current_selection(), utils.actions.CHECKPOINT)
   vim.api.nvim_set_current_win(window.window)
 end
 

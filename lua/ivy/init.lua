@@ -1,10 +1,27 @@
 local controller = require "ivy.controller"
+local libivy = require "ivy.libivy"
 local config = require "ivy.config"
+local utils = require "ivy.utils"
 local register_backend = require "ivy.register_backend"
 
 local ivy = {}
+
+ivy.action = utils.actions
+ivy.utils = utils
+
+ivy.match = libivy.ivy_match
+
 ivy.run = controller.run
 ivy.register_backend = register_backend
+
+ivy.checkpoint = controller.checkpoint
+ivy.paste = controller.paste
+ivy.complete = controller.complete
+ivy.destroy = controller.destroy
+ivy.input = controller.input
+ivy.next = controller.next
+ivy.previous = controller.previous
+ivy.search = controller.search
 
 -- Private variable to check if ivy has been setup, this is to prevent multiple
 -- setups of ivy. This is only exposed for testing purposes.

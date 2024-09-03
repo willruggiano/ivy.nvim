@@ -1,9 +1,9 @@
-local controller = require "ivy.controller"
+local api = require "ivy"
 
 -- Put the controller in to the vim global so we can access it in mappings
 -- better without requires. You can call controller commands like `vim.ivy.xxx`.
 -- luacheck: ignore
-vim.ivy = controller
+vim.ivy = api
 
 vim.paste = (function(overridden)
   return function(lines, phase)
