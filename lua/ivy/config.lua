@@ -28,6 +28,21 @@ config.default_config = {
     "ivy.backends.rg",
     "ivy.backends.lsp-workspace-symbols",
   },
+  mappings = {
+    ["<C-c>"] = "destroy",
+    ["<C-u>"] = "clear",
+    ["<C-n>"] = "next",
+    ["<C-p>"] = "previous",
+    ["<C-M-n>"] = "next_checkpoint",
+    ["<C-M-p>"] = "previous_checkpoint",
+    ["<CR>"] = "complete",
+    ["<C-v>"] = "vsplit",
+    ["<C-s>"] = "split",
+    ["<BS>"] = "backspace",
+    ["<Left>"] = "left",
+    ["<Right>"] = "right",
+    ["<C-w>"] = "delete_word",
+  },
 }
 
 return setmetatable(config, config_mt)

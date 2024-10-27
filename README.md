@@ -76,6 +76,23 @@ require("ivy").setup {
     -- default one.
     { "ivy.backends.files", { keymap = "<C-p>" } },
   },
+  -- Set mappings of your own, you can use the action `key` to define the
+  -- action you want.
+  mappings = {
+    ["<CR>"] = "complete"
+  }
+}
+```
+
+When defining config overrides in the setup function, this will overwrite any
+default config, not merge it. To merge the configuration you can use the
+`vim.tbl_extend` use the default configuration and add any extra.
+
+```lua
+require("ivy").setup {
+  mappings = vim.tbl_extend("force", config:get { "mappings" }, {
+    ["<esc>"] = "destroy",
+  }),
 }
 ```
 
@@ -129,43 +146,31 @@ show. It will also provide functionality when actions are taken. The Command
 and Key Map are the default options provided by the backend, they can be
 customized when you register it.
 
-| Module                               | Command            | Key Map     | Description                                                 |
-| ------------------------------------ | ------------------ | ----------- | ----------------------------------------------------------- |
-| `ivy.backends.files`                 | IvyFd              | \<leader\>p | Find files in your project with a custom rust file finder   |
-| `ivy.backends.ag`                    | IvyAg              | \<leader\>/ | Find content in files using the silver searcher             |
-| `ivy.backends.rg`                    | IvyRg              | \<leader\>/ | Find content in files using ripgrep cli tool                |
-| `ivy.backends.buffers`               | IvyBuffers         | \<leader\>b | Search though open buffers                                  |
-| `ivy.backends.lines`                 | IvyLines           |             | Search the lines in the current buffer                      |
-| `ivy.backends.lsp-workspace-symbols` | IvyWorkspaceSymbol |             | Search for workspace symbols using the lsp workspace/symbol |
+| Module                               | Command            | Default Key Map | Description                                                 |
+| ------------------------------------ | ------------------ | --------------- | ----------------------------------------------------------- |
+| `ivy.backends.files`                 | IvyFd              | \<leader\>p     | Find files in your project with a custom rust file finder   |
+| `ivy.backends.ag`                    | IvyAg              | \<leader\>/     | Find content in files using the silver searcher             |
+| `ivy.backends.rg`                    | IvyRg              | \<leader\>/     | Find content in files using ripgrep cli tool                |
+| `ivy.backends.buffers`               | IvyBuffers         | \<leader\>b     | Search though open buffers                                  |
+| `ivy.backends.lines`                 | IvyLines           |                 | Search the lines in the current buffer                      |
+| `ivy.backends.lsp-workspace-symbols` | IvyWorkspaceSymbol |                 | Search for workspace symbols using the lsp workspace/symbol |
 
 ### Actions
 
 Action can be run on selected candidates provide functionality
 
-| Action              | Key Map   | Description                                                      |
-| ------------------- | --------- | ---------------------------------------------------------------- |
-| Complete            | \<CR\>    | Run the completion function, usually this will be opening a file |
-| Vertical Split      | \<C-v\>   | Run the completion function in a new vertical split              |
-| Split               | \<C-s\>   | Run the completion function in a new split                       |
-| Destroy             | \<C-c\>   | Close the results window                                         |
-| Clear               | \<C-u\>   | Clear the results window                                         |
-| Delete word         | \<C-w\>   | Delete the word under the cursor                                 |
-| Next                | \<C-n\>   | Move to the next candidate                                       |
-| Previous            | \<C-p\>   | Move to the previous candidate                                   |
-| Next Checkpoint     | \<C-M-n\> | Move to the next candidate and keep Ivy open and focussed        |
-| Previous Checkpoint | \<C-M-n\> | Move to the previous candidate and keep Ivy open and focussed    |
-
-Add your own keymaps for an action by adding a `ftplugin/ivy.lua` file in your config.
-Just add a simple keymap like this:
-
-```lua
-vim.api.nvim_set_keymap(
-  "n",
-  "<esc>",
-  "<cmd>lua vim.ivy.destroy()<CR>",
-  { noremap = true, silent = true, nowait = true }
-)
-```
+| Action              | Key                   | Default Key Map | Description                                                      |
+| ------------------- | --------------------- | --------------- | ---------------------------------------------------------------- |
+| Complete            | `complete`            | \<CR\>          | Run the completion function, usually this will be opening a file |
+| Vertical Split      | `vsplit`              | \<C-v\>         | Run the completion function in a new vertical split              |
+| Split               | `split`               | \<C-s\>         | Run the completion function in a new split                       |
+| Destroy             | `destroy`             | \<C-c\>         | Close the results window                                         |
+| Clear               | `clear`               | \<C-u\>         | Clear the results window                                         |
+| Delete word         | `delete_word`         | \<C-w\>         | Delete the word under the cursor                                 |
+| Next                | `next`                | \<C-n\>         | Move to the next candidate                                       |
+| Previous            | `previous`            | \<C-p\>         | Move to the previous candidate                                   |
+| Next Checkpoint     | `next_checkpoint`     | \<C-M-n\>       | Move to the next candidate and keep Ivy open and focussed        |
+| Previous Checkpoint | `previous_checkpoint` | \<C-M-n\>       | Move to the previous candidate and keep Ivy open and focussed    |
 
 ## API
 

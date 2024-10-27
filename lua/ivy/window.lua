@@ -1,3 +1,5 @@
+local config = require "ivy.config"
+
 -- Constent options that will be used for the keymaps
 local opts = { noremap = true, silent = true, nowait = true }
 
@@ -37,6 +39,24 @@ local function call_gc(items)
   end
 end
 
+local callbacks = {
+  destroy = "<cmd>lua vim.ivy.destroy()<CR>",
+  clear = "<cmd>lua vim.ivy.search('')<CR>",
+  next = "<cmd>lua vim.ivy.next()<CR>",
+  previous = "<cmd>lua vim.ivy.previous()<CR>",
+  next_checkpoint = "<cmd>lua vim.ivy.next(); vim.ivy.checkpoint()<CR>",
+  previous_checkpoint = "<cmd>lua vim.ivy.previous(); vim.ivy.checkpoint()<CR>",
+
+  complete = "<cmd>lua vim.ivy.complete(vim.ivy.action.EDIT)<CR>",
+  vsplit = "<cmd>lua vim.ivy.complete(vim.ivy.action.VSPLIT)<CR>",
+  split = "<cmd>lua vim.ivy.complete(vim.ivy.action.SPLIT)<CR>",
+
+  backspace = "<cmd>lua vim.ivy.input('BACKSPACE')<CR>",
+  left = "<cmd>lua vim.ivy.input('LEFT')<CR>",
+  right = "<cmd>lua vim.ivy.input('RIGHT')<CR>",
+  delete_word = "<cmd>lua vim.ivy.input('DELETE_WORD')<CR>",
+}
+
 local window = {}
 
 window.index = 0
@@ -75,25 +95,15 @@ window.make_buffer = function()
     vim.api.nvim_buf_set_keymap(window.buffer, "n", chars[index], "<cmd>lua vim.ivy.input('" .. char .. "')<CR>", opts)
   end
 
-  vim.api.nvim_buf_set_keymap(window.buffer, "n", "<C-c>", "<cmd>lua vim.ivy.destroy()<CR>", opts)
-  vim.api.nvim_buf_set_keymap(window.buffer, "n", "<C-u>", "<cmd>lua vim.ivy.search('')<CR>", opts)
-  vim.api.nvim_buf_set_keymap(window.buffer, "n", "<C-n>", "<cmd>lua vim.ivy.next()<CR>", opts)
-  vim.api.nvim_buf_set_keymap(window.buffer, "n", "<C-p>", "<cmd>lua vim.ivy.previous()<CR>", opts)
-  vim.api.nvim_buf_set_keymap(window.buffer, "n", "<C-M-n>", "<cmd>lua vim.ivy.next(); vim.ivy.checkpoint()<CR>", opts)
-  vim.api.nvim_buf_set_keymap(
-    window.buffer,
-    "n",
-    "<C-M-p>",
-    "<cmd>lua vim.ivy.previous(); vim.ivy.checkpoint()<CR>",
-    opts
-  )
-  vim.api.nvim_buf_set_keymap(window.buffer, "n", "<CR>", "<cmd>lua vim.ivy.complete(vim.ivy.action.EDIT)<CR>", opts)
-  vim.api.nvim_buf_set_keymap(window.buffer, "n", "<C-v>", "<cmd>lua vim.ivy.complete(vim.ivy.action.VSPLIT)<CR>", opts)
-  vim.api.nvim_buf_set_keymap(window.buffer, "n", "<C-s>", "<cmd>lua vim.ivy.complete(vim.ivy.action.SPLIT)<CR>", opts)
-  vim.api.nvim_buf_set_keymap(window.buffer, "n", "<BS>", "<cmd>lua vim.ivy.input('BACKSPACE')<CR>", opts)
-  vim.api.nvim_buf_set_keymap(window.buffer, "n", "<Left>", "<cmd>lua vim.ivy.input('LEFT')<CR>", opts)
-  vim.api.nvim_buf_set_keymap(window.buffer, "n", "<Right>", "<cmd>lua vim.ivy.input('RIGHT')<CR>", opts)
-  vim.api.nvim_buf_set_keymap(window.buffer, "n", "<C-w>", "<cmd>lua vim.ivy.input('DELETE_WORD')<CR>", opts)
+  local mappings = config:get { "mappings" }
+  assert(mappings, "The mappings key is missing from the config, something has gone horribly wrong")
+  for key, value in pairs(mappings) do
+    if callbacks[value] == nil then
+      error("The mapping '" .. value .. "' is not a valid ivy callback")
+    end
+
+    vim.api.nvim_buf_set_keymap(window.buffer, "n", key, callbacks[value], opts)
+  end
 end
 
 window.get_current_selection = function()
