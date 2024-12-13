@@ -1,10 +1,11 @@
+local window = require "ivy.window"
 local utils = require "ivy.utils"
 local libivy = require "ivy.libivy"
 
 local function items(input)
   local list = {}
 
-  local lines = vim.api.nvim_buf_get_lines(vim.ivy.origin(), 0, -1, false)
+  local lines = vim.api.nvim_buf_get_lines(window.origin_buffer, 0, -1, false)
   for index = 1, #lines do
     local line = lines[index]
     local score = libivy.ivy_match(input, line)
