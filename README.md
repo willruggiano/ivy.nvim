@@ -79,8 +79,8 @@ require("ivy").setup {
   -- Set mappings of your own, you can use the action `key` to define the
   -- action you want.
   mappings = {
-    ["<CR>"] = "complete",
-  },
+    ["<CR>"] = "complete"
+  }
 }
 ```
 
@@ -146,15 +146,14 @@ show. It will also provide functionality when actions are taken. The Command
 and Key Map are the default options provided by the backend, they can be
 customized when you register it.
 
-| Module                               | Command            | Key Map     | Description                                                           |
-| ------------------------------------ | ------------------ | ----------- | --------------------------------------------------------------------- |
-| `ivy.backends.files`                 | IvyFd              | \<leader\>p | Find files in your project with a custom rust file finder             |
-| `ivy.backends.ag`                    | IvyAg              | \<leader\>/ | Find content in files using the silver searcher                       |
-| `ivy.backends.rg`                    | IvyRg              | \<leader\>/ | Find content in files using ripgrep cli tool                          |
-| `ivy.backends.buffers`               | IvyBuffers         | \<leader\>b | Search though open buffers                                            |
-| `ivy.backends.lines`                 | IvyLines           |             | Search the lines in the current buffer                                |
-| `ivy.backends.lsp-document-symbols`  | IvyDocumentSymbol  |             | Search for document symbols using the lsp textDocument/documentSymbol |
-| `ivy.backends.lsp-workspace-symbols` | IvyWorkspaceSymbol |             | Search for workspace symbols using the lsp workspace/symbol           |
+| Module                               | Command            | Default Key Map | Description                                                 |
+| ------------------------------------ | ------------------ | --------------- | ----------------------------------------------------------- |
+| `ivy.backends.files`                 | IvyFd              | \<leader\>p     | Find files in your project with a custom rust file finder   |
+| `ivy.backends.ag`                    | IvyAg              | \<leader\>/     | Find content in files using the silver searcher             |
+| `ivy.backends.rg`                    | IvyRg              | \<leader\>/     | Find content in files using ripgrep cli tool                |
+| `ivy.backends.buffers`               | IvyBuffers         | \<leader\>b     | Search though open buffers                                  |
+| `ivy.backends.lines`                 | IvyLines           |                 | Search the lines in the current buffer                      |
+| `ivy.backends.lsp-workspace-symbols` | IvyWorkspaceSymbol |                 | Search for workspace symbols using the lsp workspace/symbol |
 
 ### Actions
 

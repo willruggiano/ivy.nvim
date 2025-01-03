@@ -26,7 +26,6 @@ config.default_config = {
     "ivy.backends.files",
     "ivy.backends.lines",
     "ivy.backends.rg",
-    "ivy.backends.lsp-document-symbols",
     "ivy.backends.lsp-workspace-symbols",
   },
   mappings = {
